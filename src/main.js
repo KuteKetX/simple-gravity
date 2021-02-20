@@ -2,7 +2,7 @@ let objects = []
 let camera;
 
 let camSpeed = 25;
-let zoom = 1;
+let zoom = 0.5;
 
 const debugEnabled = true;
 
@@ -141,12 +141,14 @@ function keyPressed() {
 
 // Called every time the user scrolls.
 function mouseWheel(event) {
-	// BUG: If we're zoomed too far it will freak out if we try to zoom any
-	//      farther due to me using approximate checks other than accurate ones
 	if (zoom > 0) {
-		zoom -= event.delta / 100;
+		if (zoom - (event.delta / 100) <= 0.01) {
+			zoom = 0.01;
+		} else {
+			zoom -= event.delta / 100;
+		}
 	} else {
-		zoom += event.delta / 100;
+		zoom = 0.01;
 	}
 
 	// if (debugEnabled) {

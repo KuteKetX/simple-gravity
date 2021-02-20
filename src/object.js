@@ -30,6 +30,12 @@ class GravityObject {
 		this.speed.add(force * (other.pos.x - this.pos.x) / distance / this.mass, force * (other.pos.y - this.pos.y) / distance / this.mass);
 	}
 
+	calculateMouseForce(x, y) {
+		const distance = dist(this.pos.x, this.pos.y, x, y);
+		const force = 6.674 * this.mass * 100000 / distance ** 2;
+		this.speed.add(force * (x - this.pos.x) / distance / this.mass, force * (y - this.pos.y) / distance / this.mass);
+	}
+
 	applyForce() {
 		this.pos.add(this.speed);
 	}

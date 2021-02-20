@@ -246,7 +246,7 @@ function draw() {
 					break;
 				}
 
-				objects[i] = new GravityObject(random(50 / (zoom * 2), 10000 / zoom), random(camera.x - (1500 / zoom), camera.x + (1500 / zoom)), random(camera.y - (1500 / zoom), camera.y + (1500 / zoom)), random(-32, 32), random(-32, 32));
+				objects[i] = new GravityObject(random(50, 10000 / (zoom * 2)), random(camera.x - (1500 / zoom), camera.x + (1500 / zoom)), random(camera.y - (1500 / zoom), camera.y + (1500 / zoom)), random(-32, 32), random(-32, 32));
 
 				if (debugEnabled) {
 					console.log("Created new GravityObject.");

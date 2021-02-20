@@ -9,7 +9,8 @@ let camSpeed = 25;
 let zoom = 0.5;
 
 const debugEnabled = true;
-const crosshairSize = 10;
+const hudEnabled = true;
+const crosshairSize = 10; // hudEnabled needs to be true.
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
@@ -30,7 +31,7 @@ function draw() {
 	background(22);
 	// translate((width / 2) - objects[0].pos.x, (height / 2) - objects[0].pos.y);
 
-	if (debugEnabled) {
+	if (hudEnabled) {
 		// Draw small crosshair.
 		stroke(255, 0, 0);
 		line((width / 2) - crosshairSize, (height / 2), (width / 2) + crosshairSize, (height / 2));
@@ -41,12 +42,18 @@ function draw() {
 		textSize(16);
 		textAlign(LEFT, TOP);
 
-		text(`FPS: ${frameRate()}`, 0, 0);
-		text(`GravityObject Count: ${objects.length}`, 0, 16);
-		text(`Camera Position: ${camera.x}, ${camera.y}`, 0, 32);
-		text(`Mouse Position: ${mouseX}, ${mouseY}`, 0, 48);
-		text(`Mouse To World: ${camMouseX}, ${camMouseY}`, 0, 64);
-		text(`Zoom Amount: ${zoom}`, 0, 80);
+		let yAlign = 0;
+
+		text(`FPS: ${frameRate()}`, 0, yAlign); yAlign += 16;
+
+		if (debugEnabled) {
+			text(`GravityObject Count: ${objects.length}`, 0, yAlign); yAlign += 16;
+			text(`Camera Position: ${camera.x}, ${camera.y}`, 0, yAlign); yAlign += 16;
+			text(`Mouse Position: ${mouseX}, ${mouseY}`, 0, yAlign); yAlign += 16;
+			text(`Mouse To World: ${camMouseX}, ${camMouseY}`, 0, yAlign); yAlign += 16;
+		}
+
+		text(`Zoom Amount: ${zoom}`, 0, yAlign); yAlign += 16;
 	}
 
 	translate(width / 2, height / 2);

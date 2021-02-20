@@ -1,16 +1,21 @@
 let objects = []
-let camera;
 
+//  Camera.
+let camera;
+let camMouseX = 0;
+let camMouseY = 0;
 let camSpeed = 25;
+
 let zoom = 0.5;
 
 const debugEnabled = true;
+const crosshairSize = 10;
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 
-	for (var i = 0; i < 100; i++) {
-		objects[i] = new GravityObject(random(50, 1000), random(-width / 2, -width * 2), random(-height / 2, -height * 2), random(-16, 16), random(-16, 16), "#CCC");
+	for (var i = 0; i < 10; i++) {
+		objects[i] = new GravityObject(random(50, 1000), random(-width / 4, -width * 4), random(-height / 4, -height * 4), random(-16, 16), random(-16, 16), "#CCC");
 	}
 
 	// camera = createVector(height / 2, width / 2);
@@ -22,7 +27,27 @@ function setup() {
 }
 
 function draw() {
+	background(22);
 	// translate((width / 2) - objects[0].pos.x, (height / 2) - objects[0].pos.y);
+
+	if (debugEnabled) {
+		// Draw small crosshair.
+		stroke(255, 0, 0);
+		line((width / 2) - crosshairSize, (height / 2), (width / 2) + crosshairSize, (height / 2));
+		line((width / 2), (height / 2) - crosshairSize, (width / 2), (height / 2) + crosshairSize);
+
+		noStroke();
+		fill(255, 0, 0);
+		textSize(16);
+		textAlign(LEFT, TOP);
+
+		text(`FPS: ${frameRate()}`, 0, 0);
+		text(`GravityObject Count: ${objects.length}`, 0, 16);
+		text(`Camera Position: ${camera.x}, ${camera.y}`, 0, 32);
+		text(`Mouse Position: ${mouseX}, ${mouseY}`, 0, 48);
+		text(`Mouse To World: ${camMouseX}, ${camMouseY}`, 0, 64);
+		text(`Zoom Amount: ${zoom}`, 0, 80);
+	}
 
 	translate(width / 2, height / 2);
 
@@ -30,9 +55,15 @@ function draw() {
 	scale(zoom);
 
 	// Translate screen to the camera position.
-	translate((width / 2) + camera.x, (height / 2) + camera.y);
+	translate(-camera.x, -camera.y);
 
-	background(22);
+	camMouseX = camera.x + (mouseX - width / 2) / zoom;
+	camMouseY = camera.y + (mouseY - height / 2) / zoom;
+
+	if (debugEnabled) {
+		// For testing.
+		// circle(camMouseX, camMouseY, 1000);
+	}
 
 	// TODO: Optimize this trash as it's very expensive and can slow down
 	//       performance when there's lots of objects in the game world.
@@ -103,11 +134,6 @@ function draw() {
 		}
 	}
 
-	// if (debugEnabled) {
-	// 	// For testing.
-	// 	circle(-width / 2, -height / 2, 100);
-	// }
-
 	// Handle camera movement.
 	if (keyIsPressed) {
 		// Speed up the camera when the player is holding shift.
@@ -117,11 +143,16 @@ function draw() {
 			camSpeed = 25;
 		}
 
-		if (keyIsDown(87)) { camera.y += camSpeed; } // Move up.
-		if (keyIsDown(65)) { camera.x += camSpeed; } // Move left.
-		if (keyIsDown(83)) { camera.y -= camSpeed; } // Move down.
-		if (keyIsDown(68)) { camera.x -= camSpeed; } // Move right.
+		if (keyIsDown(87)) { camera.y -= camSpeed; } // Move up.
+		if (keyIsDown(65)) { camera.x -= camSpeed; } // Move left.
+		if (keyIsDown(83)) { camera.y += camSpeed; } // Move down.
+		if (keyIsDown(68)) { camera.x += camSpeed; } // Move right.
 	}
+
+	// if (debugEnabled) {
+	// 	// For testing.
+	// 	circle(camera.x + (mouseX - width / 2) / zoom, camera.y + (mouseY - height / 2) / zoom, 1000);
+	// }
 }
 
 // Called when a button on the keyboard is pressed.
@@ -134,7 +165,7 @@ function keyPressed() {
 				console.log("Created new GravityObject.");
 			}
 
-			objects[i] = new GravityObject(random(50, 1000), random(-camera.x / 2, -camera.x * 2), random(-camera.y / 4, -camera.y * 4), random(-16, 16), random(-16, 16), "#CCC");
+			objects[i] = new GravityObject(random(50, 10000), random(camMouseX / 2, camMouseX * 2), random(camMouseY / 2, camMouseY * 2), random(-16, 16), random(-16, 16), "#CCC");
 		}
 	}
 }
